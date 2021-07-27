@@ -38,7 +38,7 @@ export class AzureAuthenticationContext {
     console.log('page', window.location.host);
     this.loginRedirectRequest = {
       ...this.loginRequest,
-      redirectStartPage: window.location.host,
+      redirectStartPage: `${window.location.host}/login`,
     };
   }
 

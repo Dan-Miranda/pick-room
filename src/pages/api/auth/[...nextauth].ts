@@ -11,8 +11,16 @@ const options = {
       scope: 'offline_access openid',
       tenantId: process.env.NEXT_PUBLIC_AZURE_TENANT_ID,
     }),
-  ],
 
+    Providers.Google({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+      authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code',
+    }),
+  ],
+  pages: {
+    signOut: '/auth/signout',
+  },
   session: {
     jwt: true,
     maxAge: 30 * 24 * 60 * 60, // 30 days

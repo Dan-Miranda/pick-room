@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -10,8 +10,11 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { signin } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
+import { useRouter } from 'next/dist/client/router';
+import dynamic from 'next/dynamic';
 import classes from './SignIn.module.scss';
+import { AuthContext } from '../../contexts/AuthContext';
 
 function Copyright() {
   return (
@@ -27,7 +30,20 @@ function Copyright() {
   );
 }
 
+const ButtonWithNoSSR = dynamic(
+  () => import('../../components/ButtonMicrosoftLogin'),
+  { ssr: false },
+);
+
 export default function SignInTemplate() {
+  const { signIn: signInContext } = useContext(AuthContext);
+  const [session] = useSession();
+  const router = useRouter();
+
+  const signInMicrosoft = () => {
+    // authenticationContext.login('loginPopup', returnedAccountInfo);
+  };
+
   return (
     <Grid container className={classes.container}>
       <Grid item xs={false} sm={6} md={8} className={classes.image} />
@@ -44,62 +60,27 @@ export default function SignInTemplate() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography align="center" component="h1" variant="h5">
-            SignIn with Microsoft Account
+            SignIn
           </Typography>
-          {/* <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              className={classes.input}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Senha"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              className={classes.input}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+
+          <ButtonWithNoSSR
+            className={`${classes.sign} ${classes.signin}`}
+            label="Entrar com Microsoft"
+          />
+
           <Button
             type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={`${classes.sign} ${classes.signin}`}
-            onClick={() => signin('azure-ad-b2c')}
+            onClick={() => signIn('google', { callbackUrl: 'http://localhost:3000/dashboard' })}
           >
-            Sign In
+            Entrar com Google
           </Button>
-
-          <Button
-            variant="contained"
-            color="primary"
-            type="button"
-            fullWidth
-            className={`${classes.sign} ${classes.signup}`}
-          >
-            Sign Up
-          </Button>
-
           <Box mt={5}>
             <Copyright />
           </Box>
-          {/* </form> */}
         </div>
       </Grid>
     </Grid>

@@ -16,8 +16,8 @@ type AuthContextType = {
 export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: Props) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   let account: AccountInfo | undefined;
+  const isAuthenticated = !!(MSAL_CONFIG && MSAL_CONFIG.auth && MSAL_CONFIG.auth.clientId);
 
   const myMSALObj = new PublicClientApplication(MSAL_CONFIG);
   const loginRequest = {
@@ -29,12 +29,6 @@ export function AuthProvider({ children }: Props) {
     ...loginRequest,
     redirectStartPage: window.location.host,
   };
-
-  useEffect(() => {
-    if (MSAL_CONFIG && MSAL_CONFIG.auth && MSAL_CONFIG.auth.clientId) {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   const getAccount = (): AccountInfo | undefined => {
     console.log('loadAuthModule');
